@@ -29,17 +29,17 @@ function SideNav({ user, onNavigate }: { user: SessionUser; onNavigate?: () => v
   const router = useRouter();
   const items = navFor(user.role);
   return (
-    <div className="grain relative flex h-full flex-col bg-side px-3 pb-3 pt-5 text-side-ink">
+    <div className="grain relative flex h-full flex-col border-r border-line-2 bg-side px-3 pb-3 pt-5 text-side-ink">
       <Link href={items[0].href} onClick={onNavigate} className="mb-6 px-2">
-        <Logo tone="light" />
+        <Logo />
       </Link>
       <button
         onClick={() => window.dispatchEvent(new Event("open-palette"))}
-        className="mb-4 flex h-10 items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-3 text-[13.5px] text-side-ink/70 transition hover:bg-white/10"
+        className="mb-5 flex h-10 items-center gap-2 rounded-xl border border-line-2 bg-sunk px-3 text-[13.5px] text-muted shadow-[inset_0_1px_3px_rgb(0_0_0/0.12)] transition hover:text-ink"
       >
         <Search size={15} />
         <span className="flex-1 text-left">Jump to…</span>
-        <span className="rounded-md border border-white/15 px-1.5 font-mono text-[10.5px]">Ctrl K</span>
+        <span className="rounded-md border border-line-2 bg-surface px-1.5 font-mono text-[10.5px]">Ctrl K</span>
       </button>
       <nav className="flex flex-1 flex-col gap-0.5">
         {items.map((item) => {
@@ -49,11 +49,12 @@ function SideNav({ user, onNavigate }: { user: SessionUser; onNavigate?: () => v
               key={item.href}
               href={item.href}
               onClick={onNavigate}
-              className={cx("relative flex h-10 items-center gap-3 rounded-xl px-3 text-[14px] font-medium transition-colors", active ? "text-deep" : "text-side-ink/75 hover:bg-white/[0.07] hover:text-side-ink")}
+              className={cx("relative flex h-10 items-center gap-3 rounded-xl px-3 text-[14px] font-medium transition-colors", active ? "text-paper" : "text-side-ink/70 hover:bg-black/[0.05] hover:text-side-ink dark:hover:bg-white/[0.05]")}
             >
-              {active && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-xl bg-butter" transition={{ type: "spring", stiffness: 500, damping: 40 }} />}
+              {active && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-xl bg-carbon shadow-[0_2px_0_rgb(0_0_0/0.25),inset_0_1px_0_rgb(255_255_255/0.08)] dark:bg-[#2a2a28]" transition={{ type: "spring", stiffness: 500, damping: 40 }} />}
               <item.icon size={17} className="relative" />
-              <span className="relative">{item.label}</span>
+              <span className="relative flex-1">{item.label}</span>
+              <span className={cx("relative size-1.5 rounded-full transition-all", active ? "bg-orange shadow-[0_0_8px_2px_rgb(255_77_0/0.6)]" : "bg-black/15 dark:bg-white/15")} />
             </Link>
           );
         })}
@@ -61,7 +62,7 @@ function SideNav({ user, onNavigate }: { user: SessionUser; onNavigate?: () => v
       <div className="mb-3 flex gap-1.5 px-1">
         <button
           onClick={() => setPrefs({ theme: prefs.theme === "dark" ? "light" : "dark" })}
-          className="grid size-9 place-items-center rounded-xl text-side-ink/70 transition hover:bg-white/10 hover:text-side-ink"
+          className="key grid size-9 place-items-center rounded-xl bg-surface text-ink-2 transition hover:text-ink"
           aria-label={prefs.theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
           title="Theme"
         >
@@ -69,7 +70,7 @@ function SideNav({ user, onNavigate }: { user: SessionUser; onNavigate?: () => v
         </button>
         <button
           onClick={() => setPrefs({ sound: !prefs.sound })}
-          className="grid size-9 place-items-center rounded-xl text-side-ink/70 transition hover:bg-white/10 hover:text-side-ink"
+          className="key grid size-9 place-items-center rounded-xl bg-surface text-ink-2 transition hover:text-ink"
           aria-label={prefs.sound ? "Mute click sounds" : "Turn on click sounds"}
           title="Click sounds"
           data-silent
@@ -77,8 +78,8 @@ function SideNav({ user, onNavigate }: { user: SessionUser; onNavigate?: () => v
           {prefs.sound ? <Volume2 size={17} /> : <VolumeX size={17} />}
         </button>
       </div>
-      <div className="flex items-center gap-2.5 rounded-2xl bg-white/[0.07] p-2">
-        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-butter text-[13px] font-semibold text-deep">{initials(user.name)}</span>
+      <div className="flex items-center gap-2.5 rounded-2xl border border-line-2 bg-surface p-2 shadow-sm">
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-orange text-[13px] font-semibold text-carbon">{initials(user.name)}</span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-[13.5px] font-medium">{user.name}</p>
           <p className="truncate text-[12px] text-side-ink/60">
@@ -91,7 +92,7 @@ function SideNav({ user, onNavigate }: { user: SessionUser; onNavigate?: () => v
             router.push("/login");
             router.refresh();
           }}
-          className="grid size-8 place-items-center rounded-lg text-side-ink/60 transition hover:bg-white/10 hover:text-side-ink"
+          className="grid size-8 place-items-center rounded-lg text-muted transition hover:bg-sunk hover:text-ink"
           aria-label="Sign out"
           title="Sign out"
         >
@@ -115,7 +116,7 @@ export function AppShell({ user, children }: { user: SessionUser; children: Reac
         <AnimatePresence>
           {open && (
             <>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-40 bg-deep/40 backdrop-blur-[2px] lg:hidden" onClick={() => setOpen(false)} />
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-40 bg-carbon/40 backdrop-blur-[2px] lg:hidden" onClick={() => setOpen(false)} />
               <motion.aside
                 initial={{ x: -280 }}
                 animate={{ x: 0 }}
@@ -124,7 +125,7 @@ export function AppShell({ user, children }: { user: SessionUser; children: Reac
                 className="fixed inset-y-0 left-0 z-50 w-[260px] lg:hidden"
               >
                 <SideNav user={user} onNavigate={() => setOpen(false)} />
-                <button onClick={() => setOpen(false)} className="absolute right-3 top-5 grid size-8 place-items-center rounded-lg text-cream/70 hover:bg-white/10" aria-label="Close menu">
+                <button onClick={() => setOpen(false)} className="absolute right-3 top-5 grid size-8 place-items-center rounded-lg text-muted hover:bg-sunk" aria-label="Close menu">
                   <X size={18} />
                 </button>
               </motion.aside>

@@ -94,3 +94,29 @@ export function installGlobalClickSound() {
   document.addEventListener("pointerdown", handler, { capture: true });
   return () => document.removeEventListener("pointerdown", handler, { capture: true });
 }
+
+/** Front-desk service bell: a few inharmonic partials with a long decay. */
+export function playBell(volume = 0.8) {
+  const audio = getCtx();
+  if (!audio) return;
+  const base = 2050;
+  const now = audio.currentTime;
+  [
+    [1, 0.22, 1.6],
+    [2.32, 0.1, 1.1],
+    [4.25, 0.05, 0.6],
+    [6.1, 0.025, 0.35],
+  ].forEach(([ratio, amp, decay]) => {
+    const osc = audio.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = base * ratio;
+    const gain = audio.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(amp * volume, now + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+    osc.connect(gain).connect(audio.destination);
+    osc.start(now);
+    osc.stop(now + decay + 0.05);
+  });
+  noiseBurst(audio, 3200, 0.02, 0.25 * volume);
+}

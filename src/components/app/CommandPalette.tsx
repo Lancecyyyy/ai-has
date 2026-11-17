@@ -80,7 +80,7 @@ export function CommandPalette({ user }: { user: SessionUser }) {
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-[90] flex items-start justify-center px-4 pt-[12vh]">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-deep/35 backdrop-blur-[3px]" onClick={() => setOpen(false)} />
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-carbon/35 backdrop-blur-[3px]" onClick={() => setOpen(false)} />
           <motion.div
             role="dialog"
             aria-label="Command palette"

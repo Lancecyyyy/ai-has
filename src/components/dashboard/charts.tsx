@@ -116,7 +116,7 @@ export function Sparkline({ values, className }: { values: number[]; className?:
   }, [values]);
   return (
     <svg viewBox="0 0 100 30" preserveAspectRatio="none" className={cx("h-8 w-full", className)} aria-hidden>
-      <motion.path d={path} fill="none" stroke="var(--brand)" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: "easeOut" }} />
+      <motion.path d={path} fill="none" stroke="var(--signal)" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: "easeOut" }} />
     </svg>
   );
 }
@@ -167,7 +167,7 @@ export function Ring({ value, size = 120, label }: { value: number; size?: numbe
   return (
     <svg viewBox="0 0 110 110" width={size} height={size} role="img" aria-label={`${label} ${Math.round(value * 100)}%`}>
       <circle cx="55" cy="55" r={r} fill="none" stroke="var(--sunk)" strokeWidth="10" />
-      <motion.circle cx="55" cy="55" r={r} fill="none" stroke="var(--brand)" strokeWidth="10" strokeLinecap="round" strokeDasharray={c} initial={{ strokeDashoffset: c }} animate={{ strokeDashoffset: c * (1 - value) }} transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }} transform="rotate(-90 55 55)" />
+      <motion.circle cx="55" cy="55" r={r} fill="none" stroke="var(--signal)" strokeWidth="10" strokeLinecap="round" strokeDasharray={c} initial={{ strokeDashoffset: c }} animate={{ strokeDashoffset: c * (1 - value) }} transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }} transform="rotate(-90 55 55)" />
       <text x="55" y="60" textAnchor="middle" fontSize="24" fill="var(--ink)" style={{ fontFamily: "var(--font-display)" }}>
         {Math.round(value * 100)}%
       </text>

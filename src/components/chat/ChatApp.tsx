@@ -9,13 +9,13 @@ import { useToast } from "@/components/Providers";
 import { Badge, cx } from "@/components/ui";
 import { api, timeAgo, useApi } from "@/lib/client/api";
 import { playClick } from "@/lib/client/sound";
-import type { Mood } from "@/components/three/Terminal3D";
+import type { Mood } from "@/components/three/Bell3D";
 import { AssistantMessage, Typing, UserBubble } from "./MessageView";
 import { Inspector } from "./Inspector";
 import { SourceModal } from "./SourceModal";
 import type { ConvSummary, Msg } from "./types";
 
-const Mascot = dynamic(() => import("@/components/three/Terminal3D").then((m) => m.MascotTerminal), { ssr: false, loading: () => <div className="h-full" /> });
+const Mascot = dynamic(() => import("@/components/three/Bell3D").then((m) => m.BellMascot), { ssr: false, loading: () => <div className="h-full" /> });
 
 const STARTERS = [
   { title: "I forgot my password", sub: "Get a reset link in seconds" },
@@ -296,7 +296,7 @@ export function ChatApp() {
       <AnimatePresence>
         {showHistory && (
           <div className="fixed inset-0 z-40 md:hidden">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-deep/40" onClick={() => setShowHistory(false)} />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-carbon/40" onClick={() => setShowHistory(false)} />
             <motion.div initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: "spring", stiffness: 420, damping: 40 }} className="absolute inset-y-0 left-0 w-[290px] bg-bg">
               {history}
             </motion.div>
@@ -387,7 +387,7 @@ export function ChatApp() {
               e.preventDefault();
               void send(input);
             }}
-            className="mx-auto flex max-w-3xl items-end gap-2 rounded-[22px] border border-line-2 bg-surface p-2 shadow-md transition focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10"
+            className="mx-auto flex max-w-3xl items-end gap-2 rounded-[22px] border border-line-2 bg-surface p-2 shadow-md transition focus-within:border-signal focus-within:ring-4 focus-within:ring-signal/15"
           >
             <button type="button" onClick={toggleMic} className={cx("grid size-10 shrink-0 place-items-center rounded-2xl transition", listening ? "bg-bad text-white" : "text-muted hover:bg-sunk hover:text-ink")} aria-label={listening ? "Stop voice input" : "Voice input"}>
               {listening ? <MicOff size={18} /> : <Mic size={18} />}
@@ -421,7 +421,7 @@ export function ChatApp() {
       <AnimatePresence>
         {showInspector && (
           <div className="fixed inset-0 z-40 xl:hidden">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-deep/40" onClick={() => setShowInspector(false)} />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-carbon/40" onClick={() => setShowInspector(false)} />
             <motion.div initial={{ x: 340 }} animate={{ x: 0 }} exit={{ x: 340 }} transition={{ type: "spring", stiffness: 420, damping: 40 }} className="absolute inset-y-0 right-0 w-[330px] max-w-[90vw] bg-bg">
               <button onClick={() => setShowInspector(false)} className="absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-lg bg-surface/80 text-ink-2" aria-label="Close panel">
                 <X size={16} />

@@ -73,16 +73,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                className="pointer-events-auto flex max-w-md items-center gap-2.5 rounded-full bg-deep py-2 pl-2.5 pr-3 text-sm text-cream shadow-lg"
+                className="pointer-events-auto flex max-w-md items-center gap-2.5 rounded-full bg-carbon py-2 pl-2.5 pr-3 text-sm text-paper shadow-lg ring-1 ring-white/10"
               >
                 <span
-                  className={`grid size-6 place-items-center rounded-full ${t.tone === "ok" ? "bg-butter text-deep" : t.tone === "bad" ? "bg-[#ff7a8a] text-deep" : "bg-white/15"}`}
+                  className={`grid size-6 place-items-center rounded-full ${t.tone === "ok" ? "bg-orange text-carbon" : t.tone === "bad" ? "bg-[#ff7a8a] text-carbon" : "bg-white/15"}`}
                 >
                   {t.tone === "ok" ? <Check size={14} /> : t.tone === "bad" ? <TriangleAlert size={13} /> : <Info size={13} />}
                 </span>
                 <span className="leading-snug">{t.text}</span>
                 <button
-                  className="ml-1 rounded-full p-0.5 text-cream/60 hover:text-cream"
+                  className="ml-1 rounded-full p-0.5 text-paper/60 hover:text-paper"
                   onClick={() => setToasts((x) => x.filter((y) => y.id !== t.id))}
                   aria-label="Dismiss"
                 >

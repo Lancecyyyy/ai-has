@@ -22,7 +22,7 @@ AI-HAS is a 24/7 IT support assistant for a fictional company, **Meridian Group*
 
 ### Extra features added
 - **"Under the hood" panel** in chat: safety check, detected intent, retrieval confidence vs threshold, and the exact manual sections used. Click any citation to open the manual with the section highlighted.
-- **3D assistant**: a retro CRT terminal that watches the cursor and reacts (thinking, sorted, shields up). On the landing page, floppy-disk "manuals" slide into its drive, which is RAG shown literally.
+- **3D assistant**: a front-desk service bell on a piece of desk hardware. Ring it to ask for help (with a synthesized bell sound). Its LCD eyes follow the cursor, the LEDs show state (green idle, orange working, red when shields trip), the knobs spin while it thinks, and the front slot prints a ticket slip whenever something gets resolved.
 - **IT agent workspace**: ticket queue (list + board), SLA countdowns, internal notes, AI-drafted replies grounded on manuals, assign-to-me.
 - **Knowledge loop**: turn a solved ticket into a new manual in one click. The assistant can answer it immediately.
 - **Knowledge gaps**: questions the manuals couldn't answer are counted and listed, with a "Write manual" shortcut.
@@ -33,7 +33,7 @@ AI-HAS is a 24/7 IT support assistant for a fictional company, **Meridian Group*
 - **Automation controls**: pause or enable each workflow; full run log with every step.
 - **Answer feedback** (thumbs up/down) feeding the CSAT metric.
 - **CSV export** of the report (formula-injection safe).
-- **Command palette** (Ctrl + K), dark mode, synthesized key-click sounds (toggle), reduced-motion support, mobile layouts.
+- **Design**: desk-hardware look (aluminium, carbon black, signal orange; Archivo wide + JetBrains Mono). Command palette (Ctrl + K), dark mode, synthesized key-click and bell sounds (toggle), reduced-motion support, mobile layouts.
 - **Accounts**: sign in, self sign-up for employees, one-click demo seats for each role.
 
 ---
@@ -122,7 +122,7 @@ Retrieval over manual sections (BM25 + synonyms)
 
 | Layer | Brief suggested | Used | Why |
 |---|---|---|---|
-| Frontend | Next.js / React | Next.js 16 (App Router), React 19, Tailwind CSS 4, Framer Motion, React Three Fiber | One deployable app; 3D and motion for the UI |
+| Frontend | Next.js / React | Next.js 16 (App Router), React 19, Tailwind CSS 4, Framer Motion, React Three Fiber | One deployable app; 3D bell assistant and motion for the UI |
 | Backend | FastAPI or Node.js | Next.js route handlers (Node.js) | Same codebase and deploy as the UI |
 | Database | Pinecone / ChromaDB / SQL | PostgreSQL (Neon in production, PGlite locally) | Users, chats, tickets and the manual index in one place |
 | Retrieval | Vector DB | BM25 sparse retrieval with synonym expansion | Runs with no external service, is explainable in the playground, and takes milliseconds over the 43 seeded sections |
@@ -151,7 +151,7 @@ tests/                 node:test unit tests
 - Rate limits on chat, sign-in and sign-up. Security headers set in `next.config.ts`.
 
 ## Suggested defense demo (5 minutes)
-1. Landing page: point at the floppy disks going into the terminal (RAG).
+1. Landing page: click the bell. Point at the LCD cycling through answer, fix and hand-off, and the ticket slip printing out.
 2. Sign in as **Employee**. Ask "VPN keeps disconnecting". Show the incident banner, citations, and the Under the hood panel. Click a citation.
 3. Ask "I forgot my password", then **Run it**. Watch the steps.
 4. Type "my password is Hunter2 and my number is 0917 123 4567". Show the redaction.

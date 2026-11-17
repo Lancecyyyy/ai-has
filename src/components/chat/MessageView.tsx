@@ -92,7 +92,7 @@ export function AssistantMessage({
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 420, damping: 34 }} className="group flex gap-3">
-      <LogoMark size={30} className="mt-0.5 shrink-0 text-cobalt" />
+      <LogoMark size={30} className="mt-0.5 shrink-0 text-carbon dark:text-[#2a2a28]" />
       <div className="min-w-0 max-w-[92%] flex-1 sm:max-w-[80%]">
         <div
           onClick={onSelect}
@@ -216,7 +216,7 @@ export function AssistantMessage({
 export function Typing({ status, text }: { status: string; text: string }) {
   return (
     <div className="flex gap-3">
-      <LogoMark size={30} className="mt-0.5 shrink-0 text-cobalt" />
+      <LogoMark size={30} className="mt-0.5 shrink-0 text-carbon dark:text-[#2a2a28]" />
       <div className="min-w-0 max-w-[92%] rounded-[20px] rounded-tl-md border border-line bg-surface px-4 py-3 text-[15px] leading-relaxed text-ink shadow-sm sm:max-w-[80%]">
         {text ? (
           <Markdown text={text + " ▍"} />

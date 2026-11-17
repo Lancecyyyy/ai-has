@@ -2,77 +2,81 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* AI-HAS tokens: cobalt / butter / cream, the same family as Lance's other work */
+/* AI-HAS tokens: desk hardware. Aluminium, carbon black, one signal orange. */
 :root {
-  --bg: #fbf8f1;
-  --surface: #ffffff;
-  --sunk: #f3eee2;
-  --ink: #14116b;
-  --ink-2: #3b3884;
-  --muted: rgb(20 17 107 / 0.64);
-  --faint: rgb(20 17 107 / 0.44);
-  --line: rgb(20 17 107 / 0.1);
-  --line-2: rgb(20 17 107 / 0.2);
-  --brand: #261cc1;
-  --brand-2: #1d1599;
-  --on-brand: #fffdfb;
-  --hi: #f7dd7d;
-  --on-hi: #150f6e;
-  --ok: #1d7f52;
-  --ok-bg: #e3f3ea;
-  --warn: #a8540a;
-  --warn-bg: #fbeedd;
+  --bg: #e9e9e6;
+  --surface: #f7f7f5;
+  --sunk: #dfdfdb;
+  --ink: #121212;
+  --ink-2: #3a3a37;
+  --muted: rgb(18 18 18 / 0.62);
+  --faint: rgb(18 18 18 / 0.44);
+  --line: rgb(18 18 18 / 0.1);
+  --line-2: rgb(18 18 18 / 0.2);
+  --brand: #121212;
+  --brand-2: #2b2b29;
+  --on-brand: #f7f7f5;
+  --hi: #ff4d00;
+  --on-hi: #121212;
+  --signal: #ff4d00;
+  --signal-ink: #c23700;
+  --ok: #0f7a4f;
+  --ok-bg: #d9efe4;
+  --warn: #9a4b00;
+  --warn-bg: #f6e3cf;
   --bad: #c0283c;
-  --bad-bg: #fbe5e8;
-  --side: #261cc1;
-  --side-ink: #fffdfb;
-  --c1: #3a30d6;
-  --c2: #c98f0e;
-  --c3: #138a72;
-  --c4: #d4553b;
-  --shadow-sm: 0 1px 2px rgb(20 17 107 / 0.06);
-  --shadow-md: 0 1px 0 rgb(20 17 107 / 0.04), 0 12px 32px -14px rgb(20 17 107 / 0.28);
-  --shadow-lg: 0 30px 70px -30px rgb(20 17 107 / 0.45);
+  --bad-bg: #f6dcdf;
+  --side: #dcdcd8;
+  --side-ink: #121212;
+  --c1: #e8590c;
+  --c2: #2f6fdb;
+  --c3: #0f9d6b;
+  --c4: #8a5cf5;
+  --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 1px 2px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 12px 28px -14px rgb(0 0 0 / 0.28);
+  --shadow-lg: 0 30px 60px -28px rgb(0 0 0 / 0.4);
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: #0b0930;
-  --surface: #13104a;
-  --sunk: #0f0c3d;
-  --ink: #f6f3ea;
-  --ink-2: #d7d3f5;
-  --muted: rgb(246 243 234 / 0.66);
-  --faint: rgb(246 243 234 / 0.44);
-  --line: rgb(246 243 234 / 0.09);
-  --line-2: rgb(246 243 234 / 0.18);
-  --brand: #8f87ff;
-  --brand-2: #a49dff;
-  --on-brand: #0b0930;
-  --hi: #f7dd7d;
-  --on-hi: #150f6e;
-  --ok: #5fd39c;
-  --ok-bg: rgb(95 211 156 / 0.12);
+  --bg: #131312;
+  --surface: #1c1c1b;
+  --sunk: #0e0e0d;
+  --ink: #ededea;
+  --ink-2: #c9c9c4;
+  --muted: rgb(237 237 234 / 0.64);
+  --faint: rgb(237 237 234 / 0.42);
+  --line: rgb(237 237 234 / 0.09);
+  --line-2: rgb(237 237 234 / 0.18);
+  --brand: #ededea;
+  --brand-2: #ffffff;
+  --on-brand: #121212;
+  --hi: #ff5a14;
+  --on-hi: #121212;
+  --signal: #ff5a14;
+  --signal-ink: #ff7a3d;
+  --ok: #3fd18e;
+  --ok-bg: rgb(63 209 142 / 0.12);
   --warn: #f5a35b;
   --warn-bg: rgb(245 163 91 / 0.12);
   --bad: #ff7a8a;
   --bad-bg: rgb(255 122 138 / 0.12);
-  --side: #120e4c;
-  --side-ink: #f6f3ea;
-  --c1: #8f87ff;
-  --c2: #e7b43c;
-  --c3: #43c4a5;
-  --c4: #f07b62;
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-md: 0 1px 0 rgb(0 0 0 / 0.2), 0 16px 36px -16px rgb(0 0 0 / 0.7);
-  --shadow-lg: 0 30px 70px -30px rgb(0 0 0 / 0.8);
+  --side: #181817;
+  --side-ink: #ededea;
+  --c1: #e0602a;
+  --c2: #5585e6;
+  --c3: #1ea578;
+  --c4: #9a6fe6;
+  --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 16px 36px -16px rgb(0 0 0 / 0.8);
+  --shadow-lg: 0 30px 70px -30px rgb(0 0 0 / 0.9);
   color-scheme: dark;
 }
 
 @theme inline {
-  --font-display: var(--font-dohyeon), "Geist", system-ui, sans-serif;
-  --font-sans: var(--font-geist), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-sans: var(--font-archivo), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -88,6 +92,8 @@
   --color-on-brand: var(--on-brand);
   --color-hi: var(--hi);
   --color-on-hi: var(--on-hi);
+  --color-signal: var(--signal);
+  --color-signal-ink: var(--signal-ink);
   --color-ok: var(--ok);
   --color-ok-bg: var(--ok-bg);
   --color-warn: var(--warn);
@@ -96,14 +102,44 @@
   --color-bad-bg: var(--bad-bg);
   --color-side: var(--side);
   --color-side-ink: var(--side-ink);
-  --color-cobalt: #261cc1;
-  --color-deep: #150f6e;
-  --color-butter: #f7dd7d;
-  --color-cream: #fffdfb;
+  --color-carbon: #121212;
+  --color-alu: #d6d6d2;
+  --color-paper: #f7f7f5;
+  --color-orange: #ff4d00;
 
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
+}
+
+/* Wide, heavy grotesk for headings: the "engraved on the faceplate" voice */
+.font-display {
+  font-stretch: 122%;
+  font-weight: 780;
+  letter-spacing: -0.025em;
+}
+
+/* Machined grid, used sparingly on large panels */
+.grid-lines {
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* LCD: dark glass with a faint pixel matrix */
+.lcd {
+  background-color: #0f0f0e;
+  background-image: radial-gradient(rgb(255 255 255 / 0.05) 0.6px, transparent 0.7px);
+  background-size: 3px 3px;
+  box-shadow: inset 0 2px 10px rgb(0 0 0 / 0.8);
+}
+
+/* Physical key: raised cap that presses down */
+.key {
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 -2px 0 rgb(0 0 0 / 0.12) inset, 0 2px 0 rgb(0 0 0 / 0.14);
+}
+.key:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.4) inset, 0 1px 0 rgb(0 0 0 / 0.1);
 }
 
 html {
@@ -117,11 +153,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 ::selection {
-  background: var(--hi);
-  color: var(--on-hi);
+  background: var(--signal);
+  color: #121212;
 }
 :focus-visible {
-  outline: 2px solid var(--brand);
+  outline: 2px solid var(--signal);
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -132,7 +168,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Paper grain: one tiny SVG noise tile, no image files */
+/* Brushed-metal grain: one tiny SVG noise tile, no image files */
 .grain::after {
   content: "";
   position: absolute;
@@ -147,9 +183,7 @@ button:disabled {
   opacity: 0.04;
 }
 
-.scanlines {
-  background-image: repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.05) 0 1px, transparent 1px 3px);
-}
+
 
 /* Thin, calm scrollbars */
 .scroll-thin {

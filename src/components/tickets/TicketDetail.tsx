@@ -299,7 +299,7 @@ export function TicketDetail({ ticketKey }: { ticketKey: string }) {
       <AnimatePresence>
         {publish && (
           <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-deep/40" onClick={() => setPublish(null)} />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-carbon/40" onClick={() => setPublish(null)} />
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="relative w-full max-w-lg rounded-3xl border border-line bg-surface p-6 shadow-lg" role="dialog" aria-label="Publish as manual">
               <button onClick={() => setPublish(null)} className="absolute right-4 top-4 grid size-8 place-items-center rounded-lg text-muted hover:bg-sunk" aria-label="Close">
                 <X size={16} />

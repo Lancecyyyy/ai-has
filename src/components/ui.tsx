@@ -19,10 +19,10 @@ export const Button = forwardRef<HTMLButtonElement, BtnProps>(function Button(
   ref,
 ) {
   const v = {
-    primary: "bg-brand text-on-brand shadow-[inset_0_-2px_0_rgb(0_0_0/0.18)] hover:bg-brand-2",
-    secondary: "bg-surface text-ink border border-line-2 hover:border-ink/40 shadow-sm",
+    primary: "bg-brand text-on-brand shadow-[0_2px_0_rgb(0_0_0/0.28),inset_0_1px_0_rgb(255_255_255/0.12)] hover:bg-brand-2",
+    secondary: "key bg-surface text-ink border border-line-2 hover:border-ink/40",
     ghost: "text-ink-2 hover:bg-sunk",
-    hi: "bg-hi text-on-hi shadow-[inset_0_-2px_0_rgb(0_0_0/0.12)] hover:brightness-105",
+    hi: "bg-hi text-on-hi shadow-[0_2px_0_rgb(140_36_0/0.45),inset_0_1px_0_rgb(255_255_255/0.3)] hover:brightness-105",
     danger: "bg-bad-bg text-bad hover:bg-bad hover:text-white",
   }[variant];
   const s = { sm: "h-8 px-3 text-[13px] gap-1.5 rounded-lg", md: "h-10 px-4 text-sm gap-2 rounded-xl", lg: "h-12 px-5 text-[15px] gap-2 rounded-2xl" }[size];
@@ -66,7 +66,7 @@ export function CardHead({ title, sub, right }: { title: React.ReactNode; sub?: 
 
 const TONES = {
   neutral: "bg-sunk text-ink-2",
-  brand: "bg-brand/10 text-brand",
+  brand: "bg-ink/[0.07] text-ink",
   hi: "bg-hi text-on-hi",
   ok: "bg-ok-bg text-ok",
   warn: "bg-warn-bg text-warn",
@@ -130,7 +130,7 @@ export function Field({ label, hint, children, error }: { label: string; hint?: 
 }
 
 export const inputCls =
-  "w-full rounded-xl border border-line-2 bg-surface px-3.5 py-2.5 text-[14px] text-ink placeholder:text-faint outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/12";
+  "w-full rounded-xl border border-line-2 bg-surface px-3.5 py-2.5 text-[14px] text-ink placeholder:text-faint outline-none shadow-[inset_0_1px_2px_rgb(0_0_0/0.06)] transition focus:border-signal focus:ring-4 focus:ring-signal/15";
 
 export function Skeleton({ className }: { className?: string }) {
   return <div className={cx("animate-pulse rounded-lg bg-sunk", className)} />;
@@ -166,7 +166,7 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      className={cx("relative h-6 w-10 shrink-0 rounded-full transition-colors", checked ? "bg-brand" : "bg-line-2")}
+      className={cx("relative h-6 w-10 shrink-0 rounded-full transition-colors", checked ? "bg-signal" : "bg-line-2")}
     >
       <motion.span layout transition={{ type: "spring", stiffness: 600, damping: 35 }} className={cx("absolute top-0.5 size-5 rounded-full bg-white shadow", checked ? "right-0.5" : "left-0.5")} />
     </button>

@@ -65,7 +65,7 @@ function Editor({ initial, onClose, onSaved }: { initial: { id?: number; title: 
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center sm:p-6">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-deep/40" onClick={onClose} />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-carbon/40" onClick={onClose} />
       <motion.div
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -167,7 +167,7 @@ function Viewer({ id, onClose, onEdit, onDeleted }: { id: number; onClose: () =>
   const [confirm, setConfirm] = useState(false);
   return (
     <div className="fixed inset-0 z-[70] flex justify-end">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-deep/30" onClick={onClose} />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-carbon/30" onClick={onClose} />
       <motion.aside initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 40, opacity: 0 }} transition={{ type: "spring", stiffness: 420, damping: 40 }} className="relative flex h-full w-full max-w-xl flex-col border-l border-line bg-surface shadow-lg">
         {!data ? (
           <div className="space-y-3 p-6">
@@ -431,7 +431,7 @@ export function Knowledge() {
                     >
                       <span className="absolute right-0 top-0 h-full w-1.5 bg-brand opacity-0 transition group-hover:opacity-100" />
                       <div className="flex items-start gap-3">
-                        <span className="relative grid size-10 shrink-0 place-items-center rounded-lg bg-cobalt text-butter">
+                        <span className="relative grid size-10 shrink-0 place-items-center rounded-lg bg-carbon text-orange">
                           <span className="absolute left-1/2 top-0 h-2.5 w-4 -translate-x-1/2 rounded-b-[2px] bg-[#c9ccd6]" />
                           <BookOpen size={15} className="mt-1.5" />
                         </span>

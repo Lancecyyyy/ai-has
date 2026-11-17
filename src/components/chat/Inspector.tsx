@@ -3,10 +3,10 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { BookOpen, Cpu, Gauge, ShieldCheck, Sparkles, Ticket, Wand2 } from "lucide-react";
 import { cx } from "@/components/ui";
-import type { Mood } from "@/components/three/Terminal3D";
+import type { Mood } from "@/components/three/Bell3D";
 import type { Msg } from "./types";
 
-const Mascot = dynamic(() => import("@/components/three/Terminal3D").then((m) => m.MascotTerminal), { ssr: false, loading: () => <div className="h-full" /> });
+const Mascot = dynamic(() => import("@/components/three/Bell3D").then((m) => m.BellMascot), { ssr: false, loading: () => <div className="h-full" /> });
 
 const DECISION: Record<string, { label: string; icon: typeof Sparkles }> = {
   answer: { label: "Answered from manuals", icon: BookOpen },
@@ -66,7 +66,7 @@ export function Inspector({ msg, mood, engine, onCite }: { msg: Msg | null; mood
                   <p className="font-mono text-[13px] text-ink">{conf.toFixed(2)}</p>
                 </div>
                 <div className="relative h-2 rounded-full bg-sunk">
-                  <motion.div key={msg.id} initial={{ width: 0 }} animate={{ width: `${Math.min(100, conf * 100)}%` }} transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }} className={cx("h-full rounded-full", conf >= 0.42 ? "bg-brand" : "bg-warn")} />
+                  <motion.div key={msg.id} initial={{ width: 0 }} animate={{ width: `${Math.min(100, conf * 100)}%` }} transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }} className={cx("h-full rounded-full", conf >= 0.42 ? "bg-signal" : "bg-warn")} />
                   <span className="absolute -top-1 h-4 w-0.5 rounded bg-ink/60" style={{ left: "42%" }} title="Answer threshold 0.42" />
                 </div>
                 <p className="mt-1.5 text-[11.5px] text-faint">Marker = 0.42. Below it, the assistant won&apos;t answer from the manuals.</p>

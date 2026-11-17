@@ -8,7 +8,7 @@ import { Button, Field, inputCls, Segmented } from "@/components/ui";
 import { demoLogin, HOME, type DemoRole } from "./demo";
 
 const BOOT = [
-  "MERIDIAN IT · AI-HAS v1.0",
+  "AI-HAS DESK UNIT · MERIDIAN IT",
   "loading manuals ............ 12 found",
   "indexing sections .......... 41 chunks",
   "safety shields ............. armed",
@@ -26,13 +26,13 @@ function Boot() {
     return () => clearTimeout(t);
   }, [n]);
   return (
-    <div className="font-mono text-[13px] leading-[1.8] text-butter/90">
+    <div className="font-mono text-[13px] leading-[1.8] text-paper/70">
       {BOOT.slice(0, n).map((l, i) => (
-        <div key={i} className={i === BOOT.length - 1 ? "text-cream" : ""}>
+        <div key={i} className={i === BOOT.length - 1 ? "text-orange" : ""}>
           {l || " "}
         </div>
       ))}
-      <span className="caret text-butter">▍</span>
+      <span className="caret text-orange">▍</span>
     </div>
   );
 }
@@ -72,22 +72,31 @@ export function LoginClient({ demo }: { demo: boolean }) {
 
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1fr_1.05fr]">
-      <div className="grain relative hidden flex-col justify-between overflow-hidden bg-cobalt p-10 text-cream lg:flex">
+      <div className="grain relative hidden flex-col justify-between overflow-hidden bg-carbon p-10 text-paper lg:flex">
         <Link href="/">
           <Logo tone="light" />
         </Link>
         <div className="relative mx-auto w-full max-w-md">
-          <div className="rounded-[26px] bg-[#efe7d6] p-4 pb-10 shadow-[0_40px_80px_-30px_rgb(0_0_0/0.6)]">
-            <div className="scanlines min-h-[270px] rounded-2xl p-5" style={{ background: "radial-gradient(120% 90% at 50% 40%, #241ba8 0%, #150f6e 70%)" }}>
+          <div className="rounded-[22px] bg-gradient-to-b from-[#dcdcd8] to-[#bdbdb8] p-4 shadow-[0_40px_80px_-30px_rgb(0_0_0/0.8),inset_0_1px_0_rgb(255_255_255/0.7)]">
+            <div className="lcd min-h-[270px] rounded-xl p-5">
               <Boot />
             </div>
-            <div className="mt-4 flex items-center justify-between px-2">
-              <div className="h-2 w-28 rounded-full bg-[#2a2547]" />
-              <div className="h-2 w-4 rounded-sm bg-[#3cc98a]" />
+            <div className="mt-4 flex items-center justify-between px-1">
+              <div className="flex gap-2">
+                <span className="size-2 rounded-full bg-[#19d27a] shadow-[0_0_6px_1px_rgb(25_210_122/0.7)]" />
+                <span className="size-2 rounded-full bg-orange shadow-[0_0_6px_1px_rgb(255_77_0/0.7)]" />
+                <span className="size-2 rounded-full bg-black/25" />
+              </div>
+              <div className="h-1.5 w-28 rounded-full bg-black/70" />
+              <div className="flex gap-1">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <span key={i} className="h-3 w-[3px] rounded-full bg-black/25" />
+                ))}
+              </div>
             </div>
           </div>
         </div>
-        <p className="max-w-sm text-[14px] text-cream/65">Answers from the manuals, fixes on request, and a person when it matters.</p>
+        <p className="max-w-sm text-[14px] text-paper/60">Answers from the manuals, fixes on request, and a person when it matters.</p>
       </div>
 
       <div className="flex items-center justify-center px-4 py-10 sm:px-8">

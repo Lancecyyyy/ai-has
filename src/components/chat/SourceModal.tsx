@@ -31,7 +31,7 @@ export function SourceModal({ source, onClose }: { source: { docId: number; head
     <AnimatePresence>
       {source && (
         <div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center sm:p-6">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-deep/40 backdrop-blur-[2px]" onClick={onClose} />
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-carbon/40 backdrop-blur-[2px]" onClick={onClose} />
           <motion.div
             role="dialog"
             aria-label="Source manual"
