@@ -42,7 +42,14 @@ async function connect(): Promise<Conn> {
         await client.unsafe(text);
       },
     });
-    // Schema + seed run on one reserved connection so the advisory lock below holds.
+    // Schema + seed run on one dedicated session so the advisory lock below holds.
+    // Poolers (Neon/PgBouncer in transaction mode) can't hold session locks, so use the
+    // direct URL for setup when the provider gives one.
+    const direct = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL_NON_POOLING;
+    if (direct) {
+      const setupSql = postgres(direct, { max: 1, prepare: false, onnotice: () => {}, ssl: /localhost|127\.0\.0\.1/.test(direct) ? false : "require" });
+      return { db: wrap(sql), setup: wrap(setupSql), release: async () => setupSql.end({ timeout: 5 }) };
+    }
     const reserved = await sql.reserve();
     return { db: wrap(sql), setup: wrap(reserved as unknown as typeof sql), release: async () => reserved.release() };
   }
