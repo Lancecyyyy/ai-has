@@ -2,6 +2,8 @@
 
 Capstone project, WPH Academy, 4th Year BSIT.
 
+**Live:** https://ai-has-ten.vercel.app · **Code:** https://github.com/Lancecyyyy/ai-has
+
 AI-HAS is a 24/7 IT support assistant for a fictional company, **Meridian Group**. Employees chat with it in plain language. It answers from the company's own IT manuals (with sources), fixes routine problems by itself after the employee confirms, and hands everything else to a human agent as a ticket with a written summary. Managers get a live dashboard of how support is doing.
 
 ---
