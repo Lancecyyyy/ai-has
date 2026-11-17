@@ -76,7 +76,7 @@ Copy `.env.example` to `.env.local`. All are optional locally.
 
 | Variable | Purpose |
 |---|---|
-| `AUTH_SECRET` | Signs session cookies. **Set this in production** (`openssl rand -base64 32`). |
+| `AUTH_SECRET` | Signs session cookies. Optional when `DATABASE_URL` is set (a key is derived from it); set your own to control it (`openssl rand -base64 32`). |
 | `DATABASE_URL` | PostgreSQL connection string. Without it, data lives in memory and resets on restart. |
 | `OPENAI_API_KEY` | Turns on GPT-4o-mini answers, grounded on the retrieved sections. Without it, the built-in extractive engine quotes the sections directly. |
 | `OPENAI_MODEL` | Defaults to `gpt-4o-mini`. |
@@ -91,7 +91,7 @@ Copy `.env.example` to `.env.local`. All are optional locally.
 1. Push this folder to a GitHub repository.
 2. In Vercel: **Add New → Project**, import the repo. Framework is detected as Next.js; no build settings to change.
 3. In the project, open **Storage → Create Database → Neon (Postgres)** and connect it. Vercel adds `DATABASE_URL` for you. The schema and seed data are created automatically on the first request.
-4. Add `AUTH_SECRET` under **Settings → Environment Variables**. Optionally add `OPENAI_API_KEY`.
+4. Optional: add `AUTH_SECRET` and `OPENAI_API_KEY` under **Settings → Environment Variables**.
 5. Redeploy.
 
 > Without `DATABASE_URL` the app still runs on Vercel, but each serverless instance keeps its own in-memory database, so chats and tickets can disappear between requests. Use Postgres for anything you show to others.

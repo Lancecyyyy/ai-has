@@ -1,4 +1,5 @@
 import "server-only";
+import { createHash } from "node:crypto";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -17,11 +18,12 @@ const COOKIE = "has_session";
 const MAX_AGE = 60 * 60 * 12;
 
 function secret() {
-  const s = process.env.AUTH_SECRET;
-  if (!s && process.env.NODE_ENV === "production" && process.env.VERCEL_ENV === "production") {
-    console.warn("[ai-has] AUTH_SECRET is not set; using an insecure fallback. Set it in your environment.");
-  }
-  return new TextEncoder().encode(s || "ai-has-dev-secret-change-me-please-0123456789");
+  if (process.env.AUTH_SECRET) return new TextEncoder().encode(process.env.AUTH_SECRET);
+  // No AUTH_SECRET: derive a key from the (private) database URL so a deploy with only
+  // DATABASE_URL is still safe. Rotating the DB password signs everyone out, which is fine.
+  if (process.env.DATABASE_URL) return new TextEncoder().encode(createHash("sha256").update(`ai-has-session:${process.env.DATABASE_URL}`).digest("hex"));
+  if (process.env.VERCEL_ENV === "production") console.warn("[ai-has] Set AUTH_SECRET or DATABASE_URL; using the development session key.");
+  return new TextEncoder().encode("ai-has-dev-secret-change-me-please-0123456789");
 }
 
 export async function createSession(userId: number) {

@@ -19,32 +19,37 @@ export interface Db {
 type G = typeof globalThis & { __hasDb?: Promise<Db> };
 const g = globalThis as G;
 
-async function connect(): Promise<Db> {
+type Conn = { db: Db; setup: Db; release: () => Promise<void> };
+
+async function connect(): Promise<Conn> {
   const url = process.env.DATABASE_URL;
   if (url) {
     const { default: postgres } = await import("postgres");
     const sql = postgres(url, {
-      max: 5,
+      max: Number(process.env.DATABASE_POOL_MAX) || 5,
       idle_timeout: 20,
       prepare: false,
       onnotice: () => {},
       ssl: /localhost|127\.0\.0\.1/.test(url) ? false : "require",
     });
-    return {
+    const wrap = (client: typeof sql): Db => ({
       engine: "postgres",
       async query<T>(text: string, params: unknown[] = []) {
-        const rows = await sql.unsafe(text, params as never[]);
+        const rows = await client.unsafe(text, params as never[]);
         return rows as unknown as T[];
       },
       async exec(text: string) {
-        await sql.unsafe(text);
+        await client.unsafe(text);
       },
-    };
+    });
+    // Schema + seed run on one reserved connection so the advisory lock below holds.
+    const reserved = await sql.reserve();
+    return { db: wrap(sql), setup: wrap(reserved as unknown as typeof sql), release: async () => reserved.release() };
   }
   const { PGlite } = await import("@electric-sql/pglite");
   const pg = new PGlite();
   await pg.waitReady;
-  return {
+  const db: Db = {
     engine: "pglite",
     async query<T>(text: string, params: unknown[] = []) {
       const res = await pg.query(text, params as never[]);
@@ -54,13 +59,24 @@ async function connect(): Promise<Db> {
       await pg.exec(text);
     },
   };
+  return { db, setup: db, release: async () => {} };
 }
 
 async function init(): Promise<Db> {
-  const db = await connect();
-  await db.exec(SCHEMA);
-  const [{ n }] = await db.query<{ n: number }>("select count(*)::int as n from users");
-  if (n === 0) await seedDatabase(db);
+  const { db, setup, release } = await connect();
+  try {
+    // Several serverless instances can cold-start together; only one creates and seeds.
+    await setup.query("select pg_advisory_lock(727001)");
+    try {
+      await setup.exec(SCHEMA);
+      const [{ n }] = await setup.query<{ n: number }>("select count(*)::int as n from users");
+      if (n === 0) await seedDatabase(setup);
+    } finally {
+      await setup.query("select pg_advisory_unlock(727001)");
+    }
+  } finally {
+    await release();
+  }
   return db;
 }
 
