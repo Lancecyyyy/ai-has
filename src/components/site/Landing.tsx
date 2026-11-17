@@ -84,38 +84,37 @@ const SPECS = [
 function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-line-2">
-      <div className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16">
-        <div className="grid items-end gap-6 lg:grid-cols-[1.4fr_1fr]">
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={spring} className="font-display text-[48px] leading-[0.9] text-ink sm:text-[78px] lg:text-[96px]">
+      <div className="grid-lines absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_70%_80%_at_72%_50%,black_30%,transparent_75%)]" aria-hidden />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-2 px-4 pt-10 sm:px-6 lg:min-h-[calc(100svh-3.5rem-6rem)] lg:grid-cols-[1fr_1.15fr] lg:gap-0 lg:pt-0">
+        <div className="relative z-10 py-4 lg:py-16">
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={spring} className="mb-6 inline-flex items-center gap-2 rounded-full border border-line-2 bg-surface px-3 py-1 text-[13px] text-ink-2 shadow-sm">
+            <span className="size-1.5 rounded-full bg-[#19d27a] shadow-[0_0_6px_1px_rgb(25_210_122/0.7)]" />
+            Meridian IT front desk, open 24/7
+          </motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.05 }} className="font-display text-[50px] leading-[0.9] text-ink sm:text-[72px] lg:text-[62px] xl:text-[70px] 2xl:text-[84px]">
             Ring once.
             <br />
             IT <span className="text-signal-ink">answers.</span>
           </motion.h1>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.1 }} className="pb-2">
-            <p className="max-w-md text-[17px] leading-relaxed text-ink-2">
-              AI-HAS is Meridian&apos;s front desk for IT. It answers from the company&apos;s own manuals, fixes routine problems by itself, and hands the rest to a person with the whole story attached.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <DemoButton role="employee" variant="signal">
-                Ask it something
-              </DemoButton>
-              <DemoButton role="manager" variant="secondary">
-                Manager view
-              </DemoButton>
-            </div>
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.12 }} className="mt-6 max-w-[30rem] text-[17px] leading-relaxed text-ink-2">
+            AI-HAS is Meridian&apos;s front desk for IT. It answers from the company&apos;s own manuals, fixes routine problems by itself, and hands the rest to a person with the whole story attached.
+          </motion.p>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.18 }} className="mt-8 flex flex-wrap gap-3">
+            <DemoButton role="employee" variant="signal">
+              Ask it something
+            </DemoButton>
+            <DemoButton role="manager" variant="secondary">
+              Manager view
+            </DemoButton>
           </motion.div>
         </div>
-      </div>
-
-      <div className="relative mt-6 border-t border-line-2">
-        <div className="grid-lines absolute inset-0 opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_75%)]" aria-hidden />
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.2 }} className="relative mx-auto h-[380px] max-w-6xl sm:h-[520px] lg:h-[580px]">
+        <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ ...spring, delay: 0.15 }} className="relative -mx-4 h-[340px] sm:mx-0 sm:h-[460px] lg:h-[min(600px,calc(100svh-11rem))] lg:min-h-[440px]">
           <HeroDesk />
-          <p className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-line-2 bg-surface/80 px-3 py-1 text-[12.5px] text-muted backdrop-blur">Click the bell</p>
+          <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-line-2 bg-surface/80 px-3 py-1 text-[12.5px] text-muted backdrop-blur">Click the bell</p>
         </motion.div>
       </div>
 
-      <div className="border-t border-line-2 bg-surface/60">
+      <div className="relative border-t border-line-2 bg-surface/70">
         <div className="mx-auto grid max-w-7xl grid-cols-2 lg:grid-cols-4">
           {SPECS.map(([k, v], i) => (
             <motion.div key={k} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + i * 0.08 }} className={cx("px-4 py-5 sm:px-6", i > 0 && "lg:border-l", i % 2 === 1 && "border-l", i > 1 && "border-t lg:border-t-0", "border-line-2")}>

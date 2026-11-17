@@ -504,13 +504,13 @@ function Desk({ mood, demo, ring, onRing, interactive }: { mood: Mood; demo: boo
   );
 }
 
-function Rig({ children, intensity = 1, tilt = 0.4 }: { children: React.ReactNode; intensity?: number; tilt?: number }) {
+function Rig({ children, intensity = 1, tilt = 0.4, y = -0.15 }: { children: React.ReactNode; intensity?: number; tilt?: number; y?: number }) {
   const g = useRef<THREE.Group>(null);
   useFrame(({ clock }, dt) => {
     if (!g.current) return;
     g.current.rotation.y = damp(g.current.rotation.y, pointer.x * 0.3 * intensity - 0.28, 2.5, dt);
     g.current.rotation.x = damp(g.current.rotation.x, tilt - pointer.y * 0.08 * intensity, 2.5, dt);
-    g.current.position.y = -0.15 + Math.sin(clock.elapsedTime * 0.8) * 0.03;
+    g.current.position.y = y + Math.sin(clock.elapsedTime * 0.8) * 0.03;
   });
   return <group ref={g}>{children}</group>;
 }
@@ -533,7 +533,7 @@ function Fit({ base }: { base: number }) {
   const { camera, size } = useThree();
   useEffect(() => {
     const aspect = size.width / Math.max(1, size.height);
-    camera.position.z = aspect < 1.25 ? base * (1.25 / Math.max(0.55, aspect)) * 0.92 : base;
+    camera.position.z = aspect < 1.25 ? base * (1.25 / Math.max(0.55, aspect)) * 1.12 : base;
     camera.updateProjectionMatrix();
   }, [camera, size, base]);
   return null;
@@ -579,9 +579,9 @@ export function HeroDesk() {
     <div ref={ref} className="h-full w-full">
       <Canvas frameloop={inView ? "always" : "never"} dpr={[1, 1.75]} camera={{ position: [0, 0.3, 7.3], fov: 30 }} gl={{ antialias: true, alpha: true }} aria-label="A desk service bell with a small screen, the AI-HAS assistant">
         <Lights />
-        <Fit base={7.3} />
+        <Fit base={6.9} />
         <Suspense fallback={null}>
-          <Rig>
+          <Rig y={-0.4}>
             <Desk
               mood={mood}
               demo
@@ -593,7 +593,7 @@ export function HeroDesk() {
               }}
             />
           </Rig>
-          <ContactShadows position={[0, -0.95, 0]} opacity={0.35} scale={10} blur={2.4} far={3} color="#111111" />
+          <ContactShadows position={[0, -1.2, 0]} opacity={0.35} scale={10} blur={2.4} far={3} color="#111111" />
         </Suspense>
       </Canvas>
     </div>
