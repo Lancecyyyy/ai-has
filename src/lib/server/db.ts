@@ -25,11 +25,23 @@ async function connect(): Promise<Conn> {
   const url = process.env.DATABASE_URL;
   if (url) {
     const { default: postgres } = await import("postgres");
+    // postgres.js JSON.stringify()s every json/jsonb parameter. The app already passes
+    // JSON text (as PGlite expects), so pass strings through untouched or they are
+    // stored double-encoded as a jsonb string instead of an object.
+    const types = {
+      json: {
+        to: 114,
+        from: [114, 3802],
+        serialize: (x: unknown) => (typeof x === "string" ? x : JSON.stringify(x)),
+        parse: (x: string) => JSON.parse(x),
+      },
+    };
     const sql = postgres(url, {
       max: Number(process.env.DATABASE_POOL_MAX) || 5,
       idle_timeout: 20,
       prepare: false,
       onnotice: () => {},
+      types,
       ssl: /localhost|127\.0\.0\.1/.test(url) ? false : "require",
     });
     const wrap = (client: typeof sql): Db => ({
@@ -47,7 +59,7 @@ async function connect(): Promise<Conn> {
     // direct URL for setup when the provider gives one.
     const direct = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL_NON_POOLING;
     if (direct) {
-      const setupSql = postgres(direct, { max: 1, prepare: false, onnotice: () => {}, ssl: /localhost|127\.0\.0\.1/.test(direct) ? false : "require" });
+      const setupSql = postgres(direct, { max: 1, prepare: false, onnotice: () => {}, types, ssl: /localhost|127\.0\.0\.1/.test(direct) ? false : "require" });
       return { db: wrap(sql), setup: wrap(setupSql), release: async () => setupSql.end({ timeout: 5 }) };
     }
     const reserved = await sql.reserve();
@@ -78,6 +90,11 @@ async function init(): Promise<Db> {
       await setup.exec(SCHEMA);
       const [{ n }] = await setup.query<{ n: number }>("select count(*)::int as n from users");
       if (n === 0) await seedDatabase(setup);
+      // Repair rows written before the json serializer fix (stored as a jsonb string).
+      await setup.exec(`
+        update messages set meta = (meta #>> '{}')::jsonb where jsonb_typeof(meta) = 'string';
+        update automation_runs set steps = (steps #>> '{}')::jsonb where jsonb_typeof(steps) = 'string';
+      `);
     } finally {
       await setup.query("select pg_advisory_unlock(727001)");
     }
