@@ -227,7 +227,7 @@ export async function runTurn(
       `Suggested first step: confirm the device and the exact error message with the employee.`,
     ].join(" ");
     const lastUser = history.filter((h) => h.role === "user").pop()?.content;
-    const subject = STILL_BROKEN.test(guard.text) && lastUser ? lastUser : guard.text;
+    const subject = (STILL_BROKEN.test(guard.text) || intent.id === "human") && lastUser ? lastUser : guard.text;
     const ticket = await createTicket({
       conversationId,
       requesterId: user.id,
