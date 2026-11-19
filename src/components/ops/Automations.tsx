@@ -76,7 +76,7 @@ export function Automations({ manager }: { manager: boolean }) {
     setResetting(true);
     try {
       await api("/api/automations/demo-reset", { method: "POST" });
-      toast("Demo records restored: Maria has stuck print jobs and a nearly full mailbox again.", "ok");
+      toast("Maria is back to the start: stuck print jobs, full mailbox, no software, VPN profile or authenticator, and not locked.", "ok");
     } catch (e) {
       toast((e as Error).message, "bad");
     } finally {

@@ -70,11 +70,22 @@ export async function ensureRecords(db: Db) {
   }
 }
 
-/** Puts the demo employee's print queue and mailbox back to their starting state. */
+/**
+ * Puts the demo employee back to the starting state so every automation can be
+ * shown again: stuck print jobs, nearly full mailbox, no software or VPN
+ * profile, no authenticator, not locked, no outstanding reset links.
+ */
 export async function resetDemoRecords(db: Db) {
   const uid = await demoEmployee(db);
   if (!uid) return;
   await db.query("delete from print_jobs where user_id = $1", [uid]);
   await db.query("delete from mailbox_folders where user_id = $1", [uid]);
+  await db.query("delete from software_requests where user_id = $1", [uid]);
+  await db.query("delete from vpn_profiles where user_id = $1", [uid]);
+  await db.query("update password_resets set used_at = now() where user_id = $1 and used_at is null", [uid]);
+  await db.query(
+    "update users set failed_logins = 0, locked_until = null, mfa_secret = null, mfa_pending_secret = null, mfa_pending_expires = null where id = $1",
+    [uid],
+  );
   await ensureRecords(db);
 }
