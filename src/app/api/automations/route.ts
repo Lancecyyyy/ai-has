@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { q } from "@/lib/server/db";
 import { requireUser, handle } from "@/lib/server/auth";
+import { mailConfigured } from "@/lib/server/mail";
 
 export const GET = handle(async () => {
   await requireUser(["agent", "manager"]);
@@ -18,5 +19,17 @@ export const GET = handle(async () => {
      from automation_runs r join automations a on a.id = r.workflow_id left join users u on u.id = r.user_id
      order by r.created_at desc limit 40`,
   );
-  return NextResponse.json({ workflows, runs, webhook: !!process.env.AUTOMATION_WEBHOOK_URL });
+  const approvals = await q(
+    `select s.id, s.app, s.created_at, u.name as user_name, u.department from software_requests s join users u on u.id = s.user_id
+     where s.status = 'pending' order by s.created_at`,
+  );
+  const emails = await q("select id, to_address, kind, subject, status, detail, created_at from email_log order by id desc limit 8");
+  return NextResponse.json({
+    workflows,
+    runs,
+    approvals,
+    emails,
+    email: { configured: mailConfigured(), demoInbox: !!process.env.DEMO_INBOX },
+    webhook: !!process.env.AUTOMATION_WEBHOOK_URL,
+  });
 });

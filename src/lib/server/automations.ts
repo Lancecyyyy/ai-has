@@ -11,13 +11,13 @@ export interface Step {
 }
 
 export const WORKFLOWS: { id: string; name: string; description: string; minutes: number }[] = [
-  { id: "password_reset", name: "Password reset", description: "Verifies the signed-in employee, then sends a one-time reset link to their registered email.", minutes: 12 },
-  { id: "account_unlock", name: "Account unlock", description: "Checks the lockout reason in the directory and clears the failed-attempt counter.", minutes: 10 },
-  { id: "mfa_reset", name: "MFA re-enrollment", description: "Removes the old authenticator and issues a 24-hour enrollment QR code.", minutes: 15 },
-  { id: "vpn_reset", name: "VPN profile re-issue", description: "Revokes the old VPN certificate and pushes a fresh profile through device management.", minutes: 18 },
-  { id: "software_access", name: "Software provisioning", description: "Installs pre-approved apps instantly; routes licensed apps to the manager for approval.", minutes: 20 },
-  { id: "print_queue", name: "Print queue reset", description: "Purges stuck jobs for the employee and restarts the print spooler on the FollowMe queue.", minutes: 8 },
-  { id: "mailbox_cleanup", name: "Mailbox cleanup", description: "Moves mail older than 12 months to the unlimited Online Archive.", minutes: 10 },
+  { id: "password_reset", name: "Password reset", description: "Emails a single-use, 15-minute reset link to the employee's work email. The link sets a new password and unlocks the account.", minutes: 12 },
+  { id: "account_unlock", name: "Account unlock", description: "Reads the sign-in lockout, clears it and the failed-attempt counter, and emails a confirmation.", minutes: 10 },
+  { id: "mfa_reset", name: "MFA re-enrollment", description: "Removes the old authenticator and issues a 24-hour QR enrollment for a new authenticator app.", minutes: 15 },
+  { id: "vpn_reset", name: "VPN profile re-issue", description: "Revokes the old VPN profile and issues a new WireGuard key pair and downloadable profile.", minutes: 18 },
+  { id: "software_access", name: "Software provisioning", description: "Assigns pre-approved apps instantly; licensed apps go to a manager to approve or decline.", minutes: 20 },
+  { id: "print_queue", name: "Print queue reset", description: "Cancels the employee's stuck print jobs and restarts the FollowMe queue.", minutes: 8 },
+  { id: "mailbox_cleanup", name: "Mailbox cleanup", description: "Moves mail older than 12 months to the Online Archive and reports the space freed.", minutes: 10 },
 ];
 
 function mask(email: string) {

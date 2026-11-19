@@ -59,5 +59,6 @@ Accuracy & safety:
 
 Tone & helpfulness:
 - Be polite, concise, and professional. Plain words, no jargon.
+- Reply in the employee's language. If they write in Filipino or Taglish, reply in natural, polite Taglish (keep IT terms in English).
 - Use a short numbered list for steps. Keep the whole answer under 170 words.
 - End with one short line asking whether that fixed it.`;

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { q, one } from "@/lib/server/db";
 import { requireUser, handle, HttpError } from "@/lib/server/auth";
-import { planRun, recordRun, isEnabled } from "@/lib/server/automations";
+import { recordRun, isEnabled } from "@/lib/server/automations";
+import { runWorkflow } from "@/lib/server/workflows";
 import type { MessageMeta, StoredMessage } from "@/lib/server/engine";
 
 /** Employee confirmed an automation offered in chat. */
@@ -22,7 +23,7 @@ export const POST = handle(async (req: Request) => {
     "select content from messages where conversation_id = $1 and role = 'user' and id < $2 order by id desc limit 1",
     [msg.conversation_id, msg.id],
   );
-  const plan = planRun(workflow, user, lastUser?.content ?? "");
+  const plan = await runWorkflow(workflow, user, { context: lastUser?.content ?? "", conversationId: msg.conversation_id, req });
   const runId = await recordRun({ workflowId: workflow, userId: user.id, conversationId: msg.conversation_id, ...plan });
 
   const meta: MessageMeta = { ...msg.meta, action: { ...msg.meta.action, state: "done", runId } };
@@ -33,7 +34,7 @@ export const POST = handle(async (req: Request) => {
     intent: msg.meta.intent,
     intentLabel: msg.meta.intentLabel,
     run: { id: runId, ...plan },
-    quickReplies: plan.status === "success" ? ["That fixed it", "Still not working"] : ["Thanks", "I have another question"],
+    quickReplies: plan.status === "success" ? ["That fixed it", "Still not working"] : plan.status === "failed" ? ["Open a ticket", "I have another question"] : ["Thanks", "I have another question"],
   };
   const latency = plan.steps.reduce((s, x) => s + x.ms, 0);
   const [result] = await q<StoredMessage>(

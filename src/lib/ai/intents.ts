@@ -1,3 +1,5 @@
+import { FIL_GREETING, FIL_THANKS, normalizeTaglish } from "./taglish.ts";
+
 /**
  * Intent analysis: decides whether a request is routine (automation),
  * informational (answer from manuals) or needs a human (ticket).
@@ -41,10 +43,10 @@ const DEFS: { id: IntentId; label: string; category: string; workflow?: string; 
   { id: "password_reset", label: "Password reset", category: "Accounts", workflow: "password_reset", patterns: [/\b(forgot|forgotten|reset|change|expired|new)\b.{0,25}\bpass(word|code)?\b|\bpassword\b.{0,25}\b(reset|forgot|forgotten|expired|not working|doesn'?t work|wrong)\b/i] },
   { id: "account_unlock", label: "Account unlock", category: "Accounts", workflow: "account_unlock", patterns: [/\b(locked out|account (is )?locked|lockout|too many (attempts|tries)|unlock (my )?account)\b/i] },
   { id: "mfa_reset", label: "MFA reset", category: "Accounts", workflow: "mfa_reset", patterns: [/\b(new|lost|changed|replaced|broke|reset)\b.{0,20}\b(phone|mfa|authenticator|2fa)\b.{0,40}\b(mfa|authenticator|2fa|code|sign|login)?\b|\breset (my )?(mfa|2fa|authenticator)\b/i] },
-  { id: "vpn_reset", label: "VPN profile reset", category: "Network", workflow: "vpn_reset", patterns: [/\b(vpn|globalconnect)\b.{0,40}\b(certificate|cert|profile)\b.{0,20}\b(expired|invalid|error|reset)?|\breset (my )?vpn\b/i] },
+  { id: "vpn_reset", label: "VPN profile reset", category: "Network", workflow: "vpn_reset", patterns: [/\b(vpn|globalconnect)\b.{0,40}\b(certificate|cert|profile)\b.{0,20}\b(expired|invalid|error|reset)?|\breset (my )?vpn\b|\b(expired|invalid)\b.{0,20}\b(certificate|cert|profile)\b.{0,30}\b(vpn|globalconnect)\b/i] },
   { id: "software_access", label: "Software access", category: "Access", workflow: "software_access", patterns: [/\b(access|install|license|licence|request|need|get)\b.{0,30}\b(figma|adobe|photoshop|tableau|salesforce|jira|power ?bi|zoom|slack|vs ?code|visual studio code|chrome|firefox|7-?zip|notepad\+\+)\b/i] },
-  { id: "print_queue", label: "Clear print queue", category: "Devices", workflow: "print_queue", patterns: [/\b(print(er)?|printing)\b.{0,30}\b(stuck|queue|offline|not printing|won'?t print|jammed queue|pending)\b|\b(stuck|pending)\b.{0,20}\bprint/i] },
-  { id: "mailbox_cleanup", label: "Mailbox cleanup", category: "Email", workflow: "mailbox_cleanup", patterns: [/\b(mailbox|inbox|outlook|email)\b.{0,25}\b(full|storage|quota|out of space|almost full)\b/i] },
+  { id: "print_queue", label: "Clear print queue", category: "Devices", workflow: "print_queue", patterns: [/\b(print(er)?|printing)\b.{0,30}\b(stuck|queue|offline|not printing|won'?t print|jammed queue|pending)\b|\b(stuck|pending)\b.{0,20}\bprint|\bwon'?t print\b/i] },
+  { id: "mailbox_cleanup", label: "Mailbox cleanup", category: "Email", workflow: "mailbox_cleanup", patterns: [/\b(mailbox|inbox|outlook|email)\b.{0,25}\b(full|storage|quota|out of space|almost full)\b|\bfull\b.{0,25}\b(mailbox|inbox|outlook|email)\b/i] },
   { id: "hardware_repair", label: "Physical repair", category: "Hardware", patterns: [
     /\b(broken|cracked|shattered|spilled|dead pixels?|replace(ment)?|damaged|smashed|loose)\b.{0,30}\b(screen|display|keyboard|laptop|monitor|mouse|charger|battery|trackpad|hinge|keys?)\b/i,
     /\b(screen|display|keyboard|laptop|monitor|mouse|charger|battery|trackpad|hinge)\b.{0,25}\b(broken|cracked|shattered|damaged|swollen|bloated|won'?t turn on|not turning on|dead)\b/i,
@@ -63,7 +65,10 @@ const GREETING = /^\s*(hi|hello|hey|good (morning|afternoon|evening)|yo|kumusta|
 const THANKS = /^\s*(thanks?|thank you|ty|salamat|cheers|appreciate it)\b[\s\w!.,]{0,30}$/i;
 const RESOLVED = /^\s*(that (fixed|solved|worked)|it works( now)?|solved|fixed it|all good( now)?|problem solved)\b/i;
 
-export function classifyIntent(text: string): Intent {
+export function classifyIntent(input: string): Intent {
+  if (FIL_THANKS.test(input)) return { id: "thanks", label: "Thanks", category: "General", score: 1 };
+  if (FIL_GREETING.test(input)) return { id: "greeting", label: "Greeting", category: "General", score: 1 };
+  const text = normalizeTaglish(input);
   if (RESOLVED.test(text)) return { id: "resolved", label: "Confirmed fixed", category: "General", score: 1 };
   if (THANKS.test(text)) return { id: "thanks", label: "Thanks", category: "General", score: 1 };
   if (GREETING.test(text)) return { id: "greeting", label: "Greeting", category: "General", score: 1 };

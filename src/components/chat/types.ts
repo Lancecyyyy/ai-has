@@ -1,3 +1,6 @@
+/** How long a step's tick shows in the chat: real duration, kept readable. */
+export const stepMs = (ms: number) => Math.min(1600, Math.max(380, ms));
+
 export interface Source {
   n: number;
   docId: number;

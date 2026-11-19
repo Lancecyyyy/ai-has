@@ -142,4 +142,88 @@ create table if not exists incidents (
   created_at timestamptz not null default now(),
   resolved_at timestamptz
 );
+
+-- Account security used by the automations
+alter table users add column if not exists failed_logins int not null default 0;
+alter table users add column if not exists locked_until timestamptz;
+alter table users add column if not exists mfa_secret text;
+alter table users add column if not exists mfa_pending_secret text;
+alter table users add column if not exists mfa_pending_expires timestamptz;
+
+create table if not exists password_resets (
+  token_hash text primary key,
+  user_id int not null references users(id) on delete cascade,
+  expires_at timestamptz not null,
+  used_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists email_log (
+  id serial primary key,
+  to_address text not null default '',
+  account_email text not null default '',
+  kind text not null default '',
+  subject text not null default '',
+  status text not null,
+  detail text not null default '',
+  created_at timestamptz not null default now()
+);
+
+create table if not exists vpn_profiles (
+  id serial primary key,
+  user_id int not null references users(id) on delete cascade,
+  serial text not null,
+  public_key text not null,
+  private_key text not null,
+  address text not null,
+  issued_at timestamptz not null default now(),
+  expires_at timestamptz not null,
+  revoked_at timestamptz
+);
+create index if not exists vpn_profiles_user_idx on vpn_profiles(user_id, issued_at desc);
+
+create table if not exists software_requests (
+  id serial primary key,
+  user_id int not null references users(id) on delete cascade,
+  conversation_id text references conversations(id) on delete set null,
+  app text not null,
+  pre_approved boolean not null default false,
+  status text not null default 'pending',
+  approver_id int references users(id) on delete set null,
+  decided_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index if not exists software_requests_status_idx on software_requests(status, created_at desc);
+
+create table if not exists printers (
+  id text primary key,
+  name text not null,
+  status text not null default 'ready',
+  restarted_at timestamptz
+);
+
+create table if not exists print_jobs (
+  id serial primary key,
+  user_id int not null references users(id) on delete cascade,
+  printer_id text not null references printers(id) on delete cascade,
+  document text not null,
+  pages int not null default 1,
+  status text not null default 'queued',
+  created_at timestamptz not null default now(),
+  cleared_at timestamptz
+);
+create index if not exists print_jobs_user_idx on print_jobs(user_id, status);
+
+create table if not exists mailbox_folders (
+  id serial primary key,
+  user_id int not null references users(id) on delete cascade,
+  folder text not null,
+  month date not null,
+  items int not null,
+  size_mb numeric(10,1) not null,
+  location text not null default 'mailbox'
+);
+create index if not exists mailbox_folders_user_idx on mailbox_folders(user_id, location);
 `;
+
+export const MAILBOX_QUOTA_MB = 51200;

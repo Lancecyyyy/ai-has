@@ -1,4 +1,4 @@
-import { Activity, BookOpen, Bot, LayoutDashboard, ShieldCheck, Ticket, Workflow, type LucideIcon } from "lucide-react";
+import { Activity, BookOpen, Bot, LayoutDashboard, MonitorSmartphone, ShieldCheck, Ticket, Workflow, type LucideIcon } from "lucide-react";
 import type { Role } from "@/lib/server/auth";
 
 export interface NavItem {
@@ -12,6 +12,7 @@ export const NAV: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["manager"] },
   { href: "/chat", label: "Assistant", icon: Bot, roles: ["employee", "agent", "manager"] },
   { href: "/tickets", label: "Tickets", icon: Ticket, roles: ["employee", "agent", "manager"] },
+  { href: "/my-it", label: "My IT", icon: MonitorSmartphone, roles: ["employee", "agent", "manager"] },
   { href: "/knowledge", label: "Knowledge base", icon: BookOpen, roles: ["agent", "manager"] },
   { href: "/automations", label: "Automations", icon: Workflow, roles: ["agent", "manager"] },
   { href: "/security", label: "Security", icon: ShieldCheck, roles: ["agent", "manager"] },

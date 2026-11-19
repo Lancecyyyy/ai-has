@@ -1,6 +1,7 @@
 import "server-only";
 import { SCHEMA } from "./schema";
 import { seedDatabase } from "./seed";
+import { ensureRecords } from "./records";
 
 /**
  * One tiny interface over two engines:
@@ -95,6 +96,7 @@ async function init(): Promise<Db> {
         update messages set meta = (meta #>> '{}')::jsonb where jsonb_typeof(meta) = 'string';
         update automation_runs set steps = (steps #>> '{}')::jsonb where jsonb_typeof(steps) = 'string';
       `);
+      await ensureRecords(setup);
     } finally {
       await setup.query("select pg_advisory_unlock(727001)");
     }

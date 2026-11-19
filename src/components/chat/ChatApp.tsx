@@ -13,7 +13,7 @@ import type { Mood } from "@/components/three/Bell3D";
 import { AssistantMessage, Typing, UserBubble } from "./MessageView";
 import { Inspector } from "./Inspector";
 import { SourceModal } from "./SourceModal";
-import type { ConvSummary, Msg } from "./types";
+import { stepMs, type ConvSummary, type Msg } from "./types";
 
 const Mascot = dynamic(() => import("@/components/three/Bell3D").then((m) => m.BellMascot), { ssr: false, loading: () => <div className="h-full" /> });
 
@@ -170,7 +170,7 @@ export function ChatApp() {
       const d = await api<{ offer: { id: number; meta: Msg["meta"] }; result: Msg }>("/api/automations/run", { method: "POST", json: { messageId: m.id } });
       setMessages((list) => [...list.map((x) => (x.id === d.offer.id ? { ...x, meta: d.offer.meta } : x)), { ...d.result, fresh: true }]);
       setSelected(null);
-      const total = d.result.meta.run?.steps.reduce((a, s) => a + s.ms, 0) ?? 0;
+      const total = d.result.meta.run?.steps.reduce((a, s) => a + stepMs(s.ms), 0) ?? 0;
       setTimeout(() => scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" }), total + 250);
       convs.reload();
     } catch (e) {

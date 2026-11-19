@@ -50,6 +50,8 @@ export function LoginClient({ demo }: { demo: boolean }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", password: "", department: "Marketing" });
+  const [needCode, setNeedCode] = useState(false);
+  const [code, setCode] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,10 +61,15 @@ export function LoginClient({ demo }: { demo: boolean }) {
       const res = await fetch(mode === "signin" ? "/api/auth/login" : "/api/auth/signup", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(mode === "signin" ? { email: form.email, password: form.password } : form),
+        body: JSON.stringify(mode === "signin" ? { email: form.email, password: form.password, ...(needCode ? { code } : {}) } : form),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Sign-in failed");
+      if (data.mfa) {
+        setNeedCode(true);
+        setBusy(null);
+        return;
+      }
       window.location.href = HOME[data.role as DemoRole] ?? "/chat";
     } catch (err) {
       setError((err as Error).message);
@@ -171,6 +178,27 @@ export function LoginClient({ demo }: { demo: boolean }) {
                 required
               />
             </Field>
+            {needCode && mode === "signin" && (
+              <Field label="Authenticator code" hint="Open your authenticator app and enter the 6-digit code for Meridian IT.">
+                <input
+                  className={inputCls + " font-mono tracking-[0.3em]"}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                  autoFocus
+                  required
+                />
+              </Field>
+            )}
+            {mode === "signin" && (
+              <p className="-mt-1 text-right text-[13px]">
+                <Link href="/forgot-password" className="font-medium text-brand underline-offset-2 hover:underline">
+                  Forgot password?
+                </Link>
+              </p>
+            )}
             {error && (
               <p role="alert" className="rounded-xl bg-bad-bg px-3 py-2 text-[13.5px] text-bad">
                 {error}
@@ -185,6 +213,7 @@ export function LoginClient({ demo }: { demo: boolean }) {
               value={mode}
               onChange={(v) => {
                 setMode(v);
+                setNeedCode(false);
                 setError(null);
               }}
               options={[

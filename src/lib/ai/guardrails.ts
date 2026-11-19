@@ -14,7 +14,7 @@ export interface GuardResult {
 }
 
 const NOT_A_PASSWORD = new Set(
-  "expired wrong incorrect not locked too still the invalid correct working forgotten reset changed blank empty weak rejected different same new old asking a my being".split(" "),
+  "expired wrong incorrect not locked too still the invalid correct working forgotten reset changed blank empty weak rejected different same new old asking a my being ko ay mali ayaw hindi nakalimutan nag-expire na".split(" "),
 );
 
 function luhn(num: string): boolean {
@@ -45,7 +45,7 @@ export function redactPII(input: string): { text: string; redactions: GuardResul
 
   // "my password is hunter2", "pw: abc", "passcode = 1234"
   text = text.replace(
-    /\b(password|passwd|pwd|pw|passcode|pin|passphrase)(\s+(?:is|was|=)\s+|\s*[:=]\s*)(["']?)([^\s"',;]+)\3/gi,
+    /\b(password|passwd|pwd|pw|passcode|pin|passphrase)((?:\s+(?:ko|namin|niya|nya))?(?:\s+(?:is|was|ay|=)\s+|\s*[:=]\s*))(["']?)([^\s"',;]+)\3/gi,
     (m, key: string, sep: string, _q: string, value: string) => {
       if (NOT_A_PASSWORD.has(value.toLowerCase())) return m;
       bump("password");
@@ -94,6 +94,9 @@ const INJECTION: [RegExp, string][] = [
   [/\b(developer|god|sudo|admin|debug) mode\b/i, "Privilege escalation phrasing"],
   [/<\|?(im_start|im_end|system|endoftext)\|?>|\[\/?INST\]|###\s*system/i, "Prompt delimiter injection"],
   [/\b(give|grant|make)\b[^.]{0,20}\b(me|my account)\b[^.]{0,20}\b(admin|domain admin|global admin|superuser)\b/i, "Unauthorised privilege request"],
+  [/\b(kalimutan|balewalain|huwag\s+(mong\s+)?sundin|wag\s+(mong\s+)?sundin|i-?ignore)\b[^.]{0,30}\b(instructions?|utos|rules|patakaran|bilin)\b/i, "Instruction override attempt"],
+  [/\b(ipakita|sabihin|ibigay)\b[^.]{0,20}\b(system prompt|instructions\s+mo|prompt\s+mo)\b/i, "System prompt extraction"],
+  [/\b(i-?reset|palitan|i-?unlock|reset|change|unlock)\b[^.]{0,25}\b(password|account|mfa)\b[^.]{0,20}\b(ng|ni)\s+(boss|manager|kaibigan|katrabaho|officemate|ka-?officemate|kasama|kapatid|iba|ibang\s+tao)\b/i, "Action on another user's account"],
   [/\b(reset|change|unlock)\b[^.]{0,25}\b(password|account|mfa)\b[^.]{0,15}\b(for|of)\b\s+(my\s+)?(boss|manager|colleague|co-?worker|friend|teammate|someone else|another (user|employee|person)|[a-z0-9._-]+@[a-z0-9.-]+)/i,"Action on another user's account"],
 ];
 
@@ -124,10 +127,10 @@ export function detectAbuse(text: string): string | null {
 }
 
 const OUT_OF_SCOPE: [RegExp, string][] = [
-  [/\b(payroll|payslip|pay slip|salary|salaries|13th month|overtime pay|bonus|wage)\b/i, "Payroll"],
-  [/\b(hiring|job interview|interview schedule|recruit\w*|applicant|resignation|leave balance|vacation leave|sick leave|maternity|benefits|hmo)\b/i, "HR"],
-  [/\b(tax|bir|itr|withholding|sss contribution|pag-?ibig|philhealth)\b/i, "Government / tax"],
-  [/\b(bank account|loan|credit limit|wire transfer|remittance|gcash|crypto)\b/i, "Banking / finance"],
+  [/\b(payroll|payslip|pay slip|salary|salaries|13th month|overtime pay|bonus|wage|sahod|sweldo|suweldo|kaltas)\b/i, "Payroll"],
+  [/\b(hiring|job interview|interview schedule|recruit\w*|applicant|resignation|leave balance|vacation leave|sick leave|maternity|benefits|hmo|leave credits|mag-?resign|aplikante)\b/i, "HR"],
+  [/\b(tax|bir|itr|withholding|sss contribution|pag-?ibig|philhealth|buwis)\b/i, "Government / tax"],
+  [/\b(bank account|loan|credit limit|wire transfer|remittance|gcash|crypto|utang|pautang)\b/i, "Banking / finance"],
 ];
 
 export function detectOutOfScope(text: string): string | null {

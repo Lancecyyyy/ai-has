@@ -2,14 +2,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { AlertTriangle, ArrowUpRight, Check, Clock, EyeOff, Loader2, ShieldAlert, ThumbsDown, ThumbsUp, Ticket, Wand2 } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, Check, Clock, EyeOff, Loader2, ShieldAlert, ThumbsDown, ThumbsUp, Ticket, Wand2, X } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
 import { LogoMark } from "@/components/Logo";
 import { Badge, Button, cx, PRIORITY_TONE } from "@/components/ui";
 import { playChime } from "@/lib/client/sound";
-import type { Msg } from "./types";
+import { stepMs, type Msg } from "./types";
 
 const REDACT_LABEL: Record<string, string> = { password: "password", card: "card number", phone: "phone number", gov_id: "ID number", secret: "secret key", email: "personal email" };
+
+const RUN_LABEL: Record<string, string> = { success: "Done", pending_approval: "Waiting for approval", failed: "Couldn't finish", declined: "Declined" };
 
 export function UserBubble({ m }: { m: Msg }) {
   const red = m.meta?.redactions ?? [];
@@ -33,7 +35,7 @@ function Steps({ steps, animate, status }: { steps: NonNullable<Msg["meta"]["run
       if (animate && shown === steps.length && status === "success") playChime();
       return;
     }
-    const t = setTimeout(() => setShown((s) => s + 1), steps[shown].ms);
+    const t = setTimeout(() => setShown((s) => s + 1), stepMs(steps[shown].ms));
     return () => clearTimeout(t);
   }, [shown, steps, animate, status]);
   return (
@@ -41,16 +43,17 @@ function Steps({ steps, animate, status }: { steps: NonNullable<Msg["meta"]["run
       {steps.map((s, i) => {
         const done = i < shown;
         const running = i === shown;
+        const failed = done && s.ok === false;
         return (
           <li key={i} className={cx("relative flex gap-3 pb-3 last:pb-0", !done && !running && "opacity-40")}>
             {i < steps.length - 1 && <span className={cx("absolute left-[11px] top-6 h-[calc(100%-18px)] w-px transition-colors duration-300", done ? "bg-brand" : "bg-line-2")} />}
-            <span className={cx("relative z-10 grid size-6 shrink-0 place-items-center rounded-full transition-colors duration-300", done ? "bg-brand text-on-brand" : "border border-line-2 bg-surface text-muted")}>
-              {done ? <Check size={13} strokeWidth={2.5} /> : running ? <Loader2 size={12} className="animate-spin" /> : <span className="size-1.5 rounded-full bg-current" />}
+            <span className={cx("relative z-10 grid size-6 shrink-0 place-items-center rounded-full transition-colors duration-300", failed ? "bg-bad text-white" : done ? "bg-brand text-on-brand" : "border border-line-2 bg-surface text-muted")}>
+              {failed ? <X size={13} strokeWidth={2.5} /> : done ? <Check size={13} strokeWidth={2.5} /> : running ? <Loader2 size={12} className="animate-spin" /> : <span className="size-1.5 rounded-full bg-current" />}
             </span>
             <div className="min-w-0 pt-0.5">
               <p className="text-[14px] font-medium leading-tight text-ink">{s.label}</p>
               {done && (
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-0.5 font-mono text-[12px] text-muted">
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={cx("mt-0.5 font-mono text-[12px]", failed ? "text-bad" : "text-muted")}>
                   {s.detail}
                 </motion.p>
               )}
@@ -85,7 +88,7 @@ export function AssistantMessage({
   const [stepsDone, setStepsDone] = useState(!m.fresh);
   useEffect(() => {
     if (!m.fresh || !meta.run) return;
-    const total = meta.run.steps.reduce((s, x) => s + x.ms, 0);
+    const total = meta.run.steps.reduce((s, x) => s + stepMs(x.ms), 0);
     const t = setTimeout(() => setStepsDone(true), total + 150);
     return () => clearTimeout(t);
   }, [m.fresh, meta.run]);
@@ -121,8 +124,8 @@ export function AssistantMessage({
                 <Wand2 size={16} className="text-brand" />
                 <span className="font-display text-[18px] leading-none">{meta.intentLabel ?? "Automation"}</span>
                 {stepsDone ? (
-                  <Badge tone={meta.run.status === "success" ? "ok" : "warn"} dot>
-                    {meta.run.status === "success" ? "Done" : "Waiting for approval"}
+                  <Badge tone={meta.run.status === "success" ? "ok" : meta.run.status === "pending_approval" ? "warn" : "bad"} dot>
+                    {RUN_LABEL[meta.run.status] ?? meta.run.status}
                   </Badge>
                 ) : (
                   <Badge tone="brand">Running</Badge>
@@ -130,9 +133,9 @@ export function AssistantMessage({
               </div>
               <Steps steps={meta.run.steps} animate={!!m.fresh} status={meta.run.status} />
               {stepsDone && (
-                <motion.p initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mt-3 border-t border-line pt-3">
-                  {m.content}
-                </motion.p>
+                <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mt-3 border-t border-line pt-3">
+                  <Markdown text={m.content} />
+                </motion.div>
               )}
             </div>
           ) : (

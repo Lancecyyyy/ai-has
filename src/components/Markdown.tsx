@@ -4,11 +4,11 @@ import { Fragment } from "react";
 /**
  * Small, safe markdown renderer for assistant replies and manuals.
  * Supports paragraphs, numbered / bulleted lists, ## headings, **bold**, *italic*, `code`
- * and [n] citation markers. Never injects HTML.
+ * [n] citation markers and [label](/path or https://...) links. Never injects HTML.
  */
 function inline(text: string, onCite?: (n: number) => void, key = ""): React.ReactNode[] {
   const out: React.ReactNode[] = [];
-  const re = /(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`|\[\d\])/g;
+  const re = /(\[[^\]\n]+\]\((?:\/[^)\s]*|https:\/\/[^)\s]+)\)|\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`|\[\d\])/g;
   let last = 0;
   let m: RegExpExecArray | null;
   let i = 0;
@@ -16,7 +16,15 @@ function inline(text: string, onCite?: (n: number) => void, key = ""): React.Rea
     if (m.index > last) out.push(text.slice(last, m.index));
     const t = m[0];
     const k = `${key}-${i++}`;
-    if (t.startsWith("**")) out.push(<strong key={k}>{t.slice(2, -2)}</strong>);
+    const link = t.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (link) {
+      const external = link[2].startsWith("https://");
+      out.push(
+        <a key={k} href={link[2]} {...(external ? { target: "_blank", rel: "noreferrer" } : {})} className="font-medium text-brand underline underline-offset-2 hover:no-underline">
+          {link[1]}
+        </a>,
+      );
+    } else if (t.startsWith("**")) out.push(<strong key={k}>{t.slice(2, -2)}</strong>);
     else if (t.startsWith("`")) out.push(<code key={k}>{t.slice(1, -1)}</code>);
     else if (t.startsWith("[")) {
       const n = Number(t.slice(1, -1));

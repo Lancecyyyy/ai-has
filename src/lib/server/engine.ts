@@ -4,6 +4,7 @@ import { q, one } from "./db";
 import type { SessionUser } from "./auth";
 import { runGuardrails, rateLimit } from "../ai/guardrails";
 import { classifyIntent, extractSoftware, inferPriority, type Intent } from "../ai/intents";
+import { normalizeTaglish } from "../ai/taglish";
 import { confidence, type Hit } from "../ai/rag";
 import { hasOpenAI, streamOpenAI, SYSTEM_PROMPT, type ChatMsg } from "../ai/openai";
 import { searchKb, logGap, bumpCitations } from "./kb";
@@ -153,6 +154,8 @@ export async function runTurn(
   }
 
   const guard = runGuardrails(raw);
+  // English rendering of Taglish messages, used only to understand them.
+  const plain = normalizeTaglish(guard.text);
 
   // Conversation (ownership enforced)
   let convId = input.conversationId ?? null;
@@ -227,7 +230,7 @@ export async function runTurn(
       `Suggested first step: confirm the device and the exact error message with the employee.`,
     ].join(" ");
     const lastUser = history.filter((h) => h.role === "user").pop()?.content;
-    const subject = (STILL_BROKEN.test(guard.text) || intent.id === "human") && lastUser ? lastUser : guard.text;
+    const subject = (STILL_BROKEN.test(plain) || intent.id === "human") && lastUser ? lastUser : guard.text;
     const ticket = await createTicket({
       conversationId,
       requesterId: user.id,
@@ -274,7 +277,7 @@ export async function runTurn(
     );
   }
 
-  if (/^\s*(i have another question|another question|one more thing)\b/i.test(guard.text)) {
+  if (/^\s*(i have another question|another question|one more thing)\b/i.test(plain)) {
     return reply("Sure, what's going on?", { kind: "smalltalk", intent: "greeting", quickReplies: ["My laptop is slow", "Wi-Fi keeps dropping", "Request software"] });
   }
 
@@ -307,14 +310,14 @@ export async function runTurn(
       );
   }
 
-  if (STILL_BROKEN.test(guard.text) && history.some((h) => h.role === "assistant")) {
+  if (STILL_BROKEN.test(plain) && history.some((h) => h.role === "assistant")) {
     const prevIntent = classifyIntent(history.filter((h) => h.role === "user").pop()?.content ?? guard.text);
     return escalate(prevIntent, "the self-service steps didn't fix it", "Sorry that didn't do it. Let's get a person on this.");
   }
 
   // 2. Routine requests -> offer an automation
   let queryText = guard.text;
-  if (SHOW_STEPS.test(guard.text)) {
+  if (SHOW_STEPS.test(plain)) {
     const prevUser = history.filter((h) => h.role === "user").pop();
     if (prevUser) queryText = prevUser.content;
     const offer = [...history].reverse().find((h) => h.meta?.action?.state === "proposed");
@@ -333,7 +336,7 @@ export async function runTurn(
 
   // 3. Answer from manuals (RAG)
   emit({ type: "status", text: "Searching the manuals" });
-  const hits = await searchKb(queryText, 4);
+  const hits = await searchKb(normalizeTaglish(queryText), 4);
   const conf = confidence(hits);
   if (!hits.length || conf < CONFIDENT) {
     await logGap(queryText);
